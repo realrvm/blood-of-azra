@@ -1,0 +1,19 @@
+:root {
+  --font-family-yatra: 'Yatra';
+  --font-family-vinque: 'Vinque';
+  --font-beige: #b96504;
+  --font-light: #fef3d9;
+  --font-white: #ffffff;
+  --font-black: #000000;
+  --handset: 768px;
+}
+
+@font-face {
+  font-family: 'vinque';
+  src: url('./fonts/Vinque.woff') format('opentype');
+}
+
+@font-face {
+  font-family: 'yatra';
+  src: url('./fonts/Yatra.woff') format('opentype');
+}
