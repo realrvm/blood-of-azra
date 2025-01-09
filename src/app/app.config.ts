@@ -1,15 +1,15 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http'
 import {
   type ApplicationConfig,
+  isDevMode,
   provideZoneChangeDetection,
 } from '@angular/core'
 import { provideAnimations } from '@angular/platform-browser/animations'
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
 import { provideRouter } from '@angular/router'
-import { API_URL, errorHandlerInterceptor } from '@azra/core'
+import { provideServiceWorker } from '@angular/service-worker'
+import { API_URL, errorHandlerInterceptor, preset } from '@azra/core'
 import { environment } from '@azra/env/environment'
-// eslint-disable-next-line
-import Aura from '@primeng/themes/aura'
 import { providePrimeNG } from 'primeng/config'
 
 import { routes } from './app.routes'
@@ -23,9 +23,19 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
-        preset: Aura,
+        preset,
+        options: {
+          cssLayer: {
+            name: 'primeng',
+            order: 'tailwind-base, primeng, tailwind-utilities',
+          },
+        },
       },
     }),
     { provide: API_URL, useValue: environment.api_url },
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
 }

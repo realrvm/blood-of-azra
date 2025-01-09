@@ -23,11 +23,22 @@ export const routes: Routes = [
           import('@azra/layout').then((m) => m.HeaderComponent),
         outlet: 'header',
       },
+      {
+        path: '',
+        loadComponent: () =>
+          import('@azra/drawers').then((m) => m.AboutsDrawerComponent),
+        outlet: 'abouts-drawer',
+      },
+      {
+        path: '',
+        loadComponent: () =>
+          import('@azra/drawers').then((m) => m.ContactsDrawerComponent),
+        outlet: 'contacts-drawer',
+      },
     ],
   },
   {
     path: '**',
-    title: 'Not Found',
-    loadComponent: () => import('@azra/pages').then((m) => m.NotFoundComponent),
+    redirectTo: 'home',
   },
 ]

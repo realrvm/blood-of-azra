@@ -1,1 +1,42 @@
-<p class="text-2xl text-white">azra header</p>
+<div class="hidden md:block">
+  <div class="flex items-center gap-8 pt-9 mx-auto max-w-[641px] text-beige">
+    <azra-separator-icon />
+    <h1 class="text-3xl md:text-5xl font-vinque text-center uppercase">
+      <span class="text-nowrap">The Blood</span>
+      <span> of Azra</span>
+    </h1>
+    <azra-separator-icon />
+  </div>
+  <ng-container *ngTemplateOutlet="azraMenu" />
+</div>
+
+<div class="block h-full md:hidden">
+  <div
+    class="flex flex-col justify-end h-full items-center text-beige relative z-20 px-4 pb-5"
+  >
+    <h1 class="text-3xl font-vinque text-center uppercase">
+      The Blood of Azra
+    </h1>
+    <azra-separator-icon />
+    <ng-container *ngTemplateOutlet="azraMenu" />
+    <azra-separator-icon />
+  </div>
+</div>
+
+<ng-template #azraMenu>
+  <div class="flex justify-center md:mt-7">
+    <ul
+      class="flex flex-col md:flex-row items-center uppercase text-light font-vinque text-2xl gap-5 md:gap-8"
+    >
+      <li azraTransition tabindex="0">
+        <a routerLink="/content">Read</a>
+      </li>
+      <li azraTransition [class.text-beige]="aboutsDrawerOpen()">
+        <button class="uppercase" (click)="onShowAbouts()">About</button>
+      </li>
+      <li azraTransition [class.text-beige]="contactsDrawerOpen()">
+        <button class="uppercase" (click)="onShowContacts()">Contacts</button>
+      </li>
+    </ul>
+  </div>
+</ng-template>

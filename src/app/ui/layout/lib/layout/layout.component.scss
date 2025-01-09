@@ -1,0 +1,11 @@
+:host {
+  @apply block h-full;
+
+  header {
+    @apply shrink-0 h-full md:h-auto;
+  }
+
+  main {
+    @apply grow overflow-x-hidden;
+  }
+}

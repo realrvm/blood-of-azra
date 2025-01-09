@@ -1,0 +1,48 @@
+@let data = aboutsValue();
+@let error = aboutsError();
+@let isLoading = aboutsLoading();
+<p-drawer
+  [visible]="aboutsDrawer()"
+  position="right"
+  (onHide)="onHide()"
+  styleClass="p-10 overflow-y-auto w-full md:w-[25%]"
+>
+  <ng-template pTemplate="headless">
+    <div class="font-yatra flex flex-col items-center pb-10">
+      @if (isLoading) {
+        <h3 class="text-beige text-3xl !font-vinque text-center mb-10">
+          Loading...
+        </h3>
+      } @else if (error) {
+        <h3 class="text-beige text-3xl !font-vinque text-center mb-10">
+          Server Error. Reload Or Try Later.
+        </h3>
+      } @else if (data && !isLoading) {
+        <h3 class="text-beige text-3xl !font-vinque">{{ data.title }}</h3>
+        <azra-separator-icon />
+        <p class="text-light text-2xl text-center mb-6 leading-7">
+          {{ data.description }}
+        </p>
+        <p class="text-light text-2xl text-center mb-6">
+          {{ data.periodicity }}
+        </p>
+        <p class="text-light text-2xl text-center mb-6">
+          {{ data.warning }}
+        </p>
+        <p class="text-light text-2xl text-center mb-8">
+          {{ data.rating }}
+        </p>
+      } @else {
+        <h3 class="text-beige text-3xl !font-vinque text-center mb-10">
+          Something Went Wrong. Try Again Later.
+        </h3>
+      }
+      <button
+        (click)="onHide()"
+        class="border border-beige rounded-lg py-3 px-6 md:hidden text-beige text-xl hover:text-light hover:border-light transition duration-300"
+      >
+        Back
+      </button>
+    </div>
+  </ng-template>
+</p-drawer>

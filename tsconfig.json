@@ -22,6 +22,8 @@
       "@azra/env/*": ["src/environments/*"],
       "@azra/core": ["src/app/core/index.ts"],
       "@azra/layout": ["src/app/ui/layout/index.ts"],
+      "@azra/icons": ["src/app/ui/icons/index.ts"],
+      "@azra/drawers": ["src/app/ui/drawers/index.ts"],
       "@azra/pages" :["src/app/pages/index.ts"]
     }
   },

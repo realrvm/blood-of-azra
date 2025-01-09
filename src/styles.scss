@@ -1,4 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
+@use 'sass:meta';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@include meta.load-css('assets/theme.scss');
+
+@layer tailwind-base, primeng, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+html,
+body {
+  @apply min-h-full h-full;
+}
+
+body {
+  @apply bg-black;
+}
