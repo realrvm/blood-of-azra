@@ -38,6 +38,16 @@ export const routes: Routes = [
     ],
   },
   {
+    path: PATHS.content,
+    title: 'TBOA',
+    loadComponent: () => import('@azra/pages').then((m) => m.ContentComponent),
+  },
+  {
+    path: PATHS.handset,
+    title: 'TBOA',
+    loadComponent: () => import('@azra/pages').then((m) => m.HandsetComponent),
+  },
+  {
     path: '**',
     redirectTo: 'home',
   },

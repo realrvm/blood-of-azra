@@ -24,6 +24,7 @@
       "@azra/layout": ["src/app/ui/layout/index.ts"],
       "@azra/icons": ["src/app/ui/icons/index.ts"],
       "@azra/drawers": ["src/app/ui/drawers/index.ts"],
+      "@azra/sidebar": ["src/app/ui/sidebar/index.ts"],
       "@azra/pages" :["src/app/pages/index.ts"]
     }
   },

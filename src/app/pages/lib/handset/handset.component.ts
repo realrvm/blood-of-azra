@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
 
 @Component({
-  selector: 'azra-separator-icon',
+  selector: 'azra-handset',
   imports: [],
-  templateUrl: './separator-icon.component.svg',
-  styles: ``,
+  templateUrl: './handset.component.html',
+  styleUrl: './handset.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SeparatorIconComponent {}
+export class HandsetComponent {}

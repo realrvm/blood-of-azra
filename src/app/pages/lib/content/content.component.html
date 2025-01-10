@@ -1,0 +1,37 @@
+<div class="hidden md:block h-full">
+  <div class="flex gap-4 h-full" tabindex="-1">
+    <azra-sidebar />
+    <div class="max-w-[1000px] w-full relative">
+      @if (!isContentLoading() && !isContentError()) {
+        <p class="text-beige text-2xl font-vinque absolute">
+          {{ currentImageNumber() }}
+        </p>
+      }
+      @if (isContentLoading()) {
+        <p class="text-beige text-2xl font-vinque">Loading...</p>
+      }
+      @if (isContentError()) {
+        <p class="text-beige text-2xl font-vinque">
+          Server Error. Reload or Try Later
+        </p>
+      }
+      <img
+        #img
+        src="#"
+        onerror="this.style.display='none'"
+        class="object-contain w-full h-full"
+        [alt]="hasNoImage() ? '' : 'azra_image'"
+        (debounceClick)="handleOnImgClick()"
+        [debounceTime]="200"
+        azraDebounce
+        tabindex="-1"
+      />
+    </div>
+  </div>
+</div>
+
+<div class="block md:hidden h-full">
+  <div class="flex justify-center h-full">
+    <azra-sidebar />
+  </div>
+</div>

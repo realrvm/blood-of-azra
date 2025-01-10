@@ -1,0 +1,110 @@
+@if (isHandset$ | async) {
+  <div class="flex flex-col items-center justify-between h-full w-full">
+    <div class="flex flex-col items-center">
+      <h2
+        class="text-3xl font-vinque text-center text-beige mt-2 mb-4 uppercase"
+      >
+        Chapters
+      </h2>
+      <azra-separator-icon />
+      <div class="flex flex-col items-center gap-5 mt-5">
+        <button>
+          <span
+            class="text-beige text-xl font-yatra cursor-pointer hover:text-light transition duration-200"
+          >
+            Last Viewed Page
+          </span>
+        </button>
+        <div class="flex items-center gap-8">
+          <label class="text-beige font-yatra text-sm">Or Jump To Page</label>
+          <p-inputnumber
+            [(ngModel)]="comicId"
+            maxlength="4"
+            [useGrouping]="false"
+            autofocus
+          />
+          <button
+            type="button"
+            class="text-beige font-yatra text-sm py-1 px-2 cursor-pointer hover:text-light transition duration-200 border border-beige hover:border-light rounded-lg"
+          >
+            Go!
+          </button>
+        </div>
+        <azra-separator-icon />
+        @let hbooks = contents();
+        @for (book of hbooks; track $index) {
+          <div class="w-2/3">
+            <h2 class="self-start text-xl font-vinque text-light">
+              {{ book.title }}
+            </h2>
+          </div>
+          @for (chapter of book.chapters; track $index) {
+            <button>
+              <h4 class="text-xl font-vinque text-center text-light">
+                {{ chapter.title }}
+              </h4>
+            </button>
+          }
+        } @empty {
+          <h2 class="text-3xl font-vinque text-light">...</h2>
+        }
+      </div>
+    </div>
+
+    <div class="flex flex-col items-center gap-4">
+      <azra-separator-icon />
+      <a
+        class="text-beige text-xl font-yatra cursor-pointer hover:text-light transition duration-200"
+        routerLink="/home"
+        >Home Page</a
+      >
+    </div>
+  </div>
+} @else {
+  <div class="flex flex-col items-center h-full">
+    <a
+      class="text-beige font-vinque text-[48px] uppercase text-center leading-[52px] cursor-pointer hover:text-light transition duration-200"
+      routerLink="/home"
+    >
+      The Blood
+      <br />
+      of Azra
+    </a>
+    <azra-separator-icon />
+    <div class="flex items-center gap-8">
+      <label class="text-beige font-yatra text-sm">Jump To Page</label>
+      <p-inputnumber
+        [(ngModel)]="comicId"
+        maxlength="4"
+        [useGrouping]="false"
+      />
+      <button
+        type="button"
+        class="text-beige font-yatra text-sm py-1 px-2 cursor-pointer hover:text-light transition duration-200 border border-beige hover:border-light rounded-lg"
+      >
+        Go!
+      </button>
+    </div>
+    <azra-separator-icon />
+
+    @let books = contents();
+    @for (book of books; track $index) {
+      <div class="w-2/3 my-2">
+        <h2 class="self-start text-xl font-vinque text-light">
+          {{ book.title }}
+        </h2>
+      </div>
+      @for (chapter of book.chapters; track $index) {
+        <button>
+          <h4
+            class="text-2xl font-vinque text-center mt-4 uppercase text-light cursor-pointer hover:text-beige transition duration-200"
+          >
+            {{ chapter.title }}
+          </h4>
+        </button>
+      }
+    } @empty {
+      <h2 class="text-3xl font-vinque text-light">...</h2>
+    }
+  </div>
+}
