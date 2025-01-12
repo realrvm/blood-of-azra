@@ -37,7 +37,7 @@ export class SidebarComponent {
   //public readonly isHandset$ = this.responsiveService.isHandset$
   public readonly isHandset$ = this.responsiveService.isHandset$
 
-  public readonly contents = this.contentApiService.contentBooks
+  public readonly contents = this.contentApiService.contentData
 
   // TODO temp
   public comicId = 1

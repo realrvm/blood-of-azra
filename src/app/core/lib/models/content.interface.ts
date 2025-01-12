@@ -24,3 +24,18 @@ interface ContentBooks {
 export interface Content {
   data: ContentBooks[]
 }
+
+export interface CachedImage {
+  id: number
+  blob: Blob
+}
+
+export interface AzraImage {
+  id: number
+  url: string
+}
+
+export interface AzraChapter {
+  id: string
+  comics: AzraImage[]
+}

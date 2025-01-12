@@ -1,8 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
+  type ElementRef,
   inject,
   signal,
+  viewChild,
 } from '@angular/core'
 import { ContentApiService, DebounceDirective } from '@azra/core'
 import { SidebarComponent } from '@azra/sidebar'
@@ -22,6 +25,21 @@ export class ContentComponent {
   private readonly contentApiService = inject(ContentApiService)
   public readonly isContentError = this.contentApiService.contentError
   public readonly isContentLoading = this.contentApiService.isContentLoading
+  public image = viewChild<ElementRef<HTMLImageElement>>('img')
+
+  private blob = this.contentApiService.blob
+  public isBlobLoading = this.contentApiService.isBlobLoading
+  public isBlobError = this.contentApiService.isBlobError
+
+  effect = effect(() => {
+    if (this.blob()) {
+      const url = URL.createObjectURL(this.blob() as Blob)
+
+      const image = this.image() as ElementRef<HTMLImageElement>
+
+      if (image) image.nativeElement.src = url
+    }
+  })
 
   // TODO temp
   public currentImageNumber = signal(1)
@@ -30,6 +48,6 @@ export class ContentComponent {
   //
 
   public handleOnImgClick(): void {
-    console.log('double click')
+    this.contentApiService.imagesRequest.update((prev) => (prev ? prev + 1 : 1))
   }
 }

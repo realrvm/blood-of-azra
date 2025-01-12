@@ -32,6 +32,6 @@ export class AboutsDrawerComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.aboutsApiService.slug.set('/abouts')
+    this.aboutsApiService.slug.set('/api/abouts')
   }
 }

@@ -11,10 +11,15 @@ export class ApiService {
   private readonly http = inject(HttpClient)
   private readonly apiUrl = inject(API_URL)
 
-  get<T>(url: string, params: HttpParams = new HttpParams()): Observable<T> {
+  get<T>(
+    url: string,
+    blob?: 'blob',
+    params: HttpParams = new HttpParams(),
+  ): Observable<T> {
     return this.http.get<T>(`${this.apiUrl}${url}`, {
       headers: this.headers,
       params,
+      responseType: blob ? (blob as 'json') : 'json',
     })
   }
 

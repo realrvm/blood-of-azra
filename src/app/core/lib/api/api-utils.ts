@@ -29,9 +29,9 @@ const query = qs.stringify(
   },
 )
 
-export const contentUrl = `/contents?${query}`
+export const contentUrl = `/api/contents?${query}`
 
-export function countComicsAmount<T>(struct: T): number {
+export function countImagesAmount<T>(struct: T): number {
   let amount = 0
   const stack = [struct]
 
@@ -55,4 +55,10 @@ export function countComicsAmount<T>(struct: T): number {
   }
 
   return amount
+}
+
+export function getRange(id = 1): number[] {
+  if (id > 1) return [id - 1, id, id + 1, id + 2]
+
+  return [3, 2, 1]
 }

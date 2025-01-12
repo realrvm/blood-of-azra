@@ -32,6 +32,6 @@ export class ContactsDrawerComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.contactsService.slug.set('/contacts')
+    this.contactsService.slug.set('/api/contacts')
   }
 }
