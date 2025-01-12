@@ -17,10 +17,9 @@
       }
       <img
         #img
-        src="#"
-        onerror="this.style.display='none'"
+        [class.hidden]="hasNoImage()"
         class="object-contain w-full h-full"
-        [alt]="hasNoImage() ? '' : 'azra_image'"
+        alt="azra_image"
         (debounceClick)="handleOnImgClick()"
         [debounceTime]="200"
         azraDebounce

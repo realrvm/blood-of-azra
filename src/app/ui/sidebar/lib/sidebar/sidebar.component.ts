@@ -2,7 +2,7 @@ import { AsyncPipe } from '@angular/common'
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
+  //effect,
   inject,
 } from '@angular/core'
 import { FormsModule } from '@angular/forms'
@@ -37,10 +37,10 @@ export class SidebarComponent {
   //public readonly isHandset$ = this.responsiveService.isHandset$
   public readonly isHandset$ = this.responsiveService.isHandset$
 
-  public readonly contents = this.contentApiService.contentBooks
+  public readonly contents = this.contentApiService.contentData
 
   // TODO temp
   public comicId = 1
-  effect = effect(() => console.log(this.contents()))
+  //effect = effect(() => console.log(this.contents()))
   //
 }

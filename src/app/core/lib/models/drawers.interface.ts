@@ -9,4 +9,4 @@ export interface DrawersResource {
   boosty?: string
 }
 
-export type DrawersSlug = '/abouts' | '/contacts'
+export type DrawersSlug = `/api/${'abouts' | 'contacts'}`
