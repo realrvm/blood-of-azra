@@ -1,1 +1,64 @@
-<p>handset works!</p>
+<div class="w-full min-h-full h-full flex flex-col gap-10 py-10 justify-evenly">
+  <div class="flex flex-col gap-5 px-2">
+    <div class="flex items-center justify-between">
+      <button (click)="goToMainPage()">
+        <img
+          src="assets/images/main.png"
+          alt="main_page"
+          width="30"
+          height="30"
+        />
+      </button>
+      <button
+        class="text-beige font-vinque font-bold text-[18px] uppercase"
+        (click)="goToChapters()"
+      >
+        Chapters
+      </button>
+    </div>
+    @if (hasNoImage()) {
+      <p class="ml-10 mt-10 text-beige text-2xl font-vinque text-center">
+        Loading...
+      </p>
+    }
+    <img
+      #img
+      [class.hidden]="hasNoImage()"
+      class="object-contain w-full"
+      alt="azra_image'"
+      (debounceClick)="handleOnImgClick()"
+      azraDebounce
+      [debounceTime]="200"
+      tabindex="-1"
+    />
+  </div>
+  <div class="flex items-center px-2 justify-between mt-auto">
+    <button
+      (debounceClick)="onPrevSlideClick()"
+      azraDebounce
+      [debounceTime]="200"
+    >
+      <img
+        src="assets/images/arrow-left.png"
+        alt="arrow_left"
+        width="40"
+        height="10"
+      />
+    </button>
+    <span class="text-beige text-2xl text-center font-yatra">{{
+      amountTitle()
+    }}</span>
+    <button
+      (debounceClick)="onNextSlideClick()"
+      azraDebounce
+      [debounceTime]="200"
+    >
+      <img
+        src="assets/images/arrow-right.png"
+        alt="arrow_right"
+        width="40"
+        height="10"
+      />
+    </button>
+  </div>
+</div>

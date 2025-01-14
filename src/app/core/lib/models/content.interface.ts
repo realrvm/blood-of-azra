@@ -39,3 +39,8 @@ export interface AzraChapter {
   id: string
   comics: AzraImage[]
 }
+
+export interface ChaptersTitleAndId {
+  imgId: number
+  title: string
+}

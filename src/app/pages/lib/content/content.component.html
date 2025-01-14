@@ -4,7 +4,7 @@
     <div class="max-w-[1000px] w-full relative">
       @if (!isContentLoading() && !isContentError()) {
         <p class="text-beige text-2xl font-vinque absolute">
-          {{ currentImageNumber() }}
+          {{ amountTitle() }}
         </p>
       }
       @if (isContentLoading()) {

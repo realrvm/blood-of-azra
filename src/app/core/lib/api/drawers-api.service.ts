@@ -1,6 +1,12 @@
+import { type HttpErrorResponse } from '@angular/common/http'
 import { computed, inject, Injectable, signal } from '@angular/core'
 import { rxResource } from '@angular/core/rxjs-interop'
-import { ApiService, type DrawersResource, type DrawersSlug } from '@azra/core'
+import {
+  ApiService,
+  type DrawersResource,
+  type DrawersSlug,
+  setErrorMessage,
+} from '@azra/core'
 import { map } from 'rxjs'
 
 @Injectable()
@@ -16,7 +22,10 @@ export class DrawersApiService {
         .pipe(map(({ data }) => data[0])),
   })
 
-  public drawersError = computed(() => this.drawersResource.error())
+  private drawersError = computed(
+    () => this.drawersResource.error() as HttpErrorResponse,
+  )
+  public errorMessage = computed(() => setErrorMessage(this.drawersError()))
   public drawersLoading = computed(() => this.drawersResource.isLoading())
   public drawersValue = computed(
     () => this.drawersResource.value() ?? ({} satisfies DrawersResource),
