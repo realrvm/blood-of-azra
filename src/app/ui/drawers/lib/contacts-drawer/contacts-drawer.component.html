@@ -1,5 +1,4 @@
 @let data = contactsValue();
-@let error = contactsError();
 @let isLoading = contactsLoading();
 <p-drawer
   [visible]="contactsDrawer()"
@@ -13,9 +12,9 @@
         <h3 class="text-beige text-3xl !font-vinque text-center mb-10">
           Loading...
         </h3>
-      } @else if (error) {
+      } @else if (errorMessage()) {
         <h3 class="text-beige text-3xl !font-vinque text-center">
-          Server Error. Reload Or Try Later.
+          An error occurred: {{ errorMessage() }}
         </h3>
       } @else if (data && !isLoading) {
         <h3 class="text-beige text-3xl !font-vinque">Contacts</h3>

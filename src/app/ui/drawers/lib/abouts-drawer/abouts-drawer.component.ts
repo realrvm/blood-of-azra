@@ -22,7 +22,7 @@ export class AboutsDrawerComponent implements OnInit {
   private readonly aboutsDrawerService = inject(DrawersService)
 
   public readonly aboutsValue = this.aboutsApiService.drawersValue
-  public readonly aboutsError = this.aboutsApiService.drawersError
+  public readonly errorMessage = this.aboutsApiService.errorMessage
   public readonly aboutsLoading = this.aboutsApiService.drawersLoading
 
   public aboutsDrawer = this.aboutsDrawerService.isAboutsDrawerOpen

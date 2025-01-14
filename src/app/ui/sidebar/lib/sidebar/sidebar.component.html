@@ -6,9 +6,14 @@
       >
         Chapters
       </h2>
-      <azra-separator-icon />
+      <img
+        src="assets/images/sprite.svg"
+        alt="main_page"
+        width="146"
+        height="53"
+      />
       <div class="flex flex-col items-center gap-5 mt-5">
-        <button>
+        <button (click)="toLastViewedPage()">
           <span
             class="text-beige text-xl font-yatra cursor-pointer hover:text-light transition duration-200"
           >
@@ -17,20 +22,35 @@
         </button>
         <div class="flex items-center gap-8">
           <label class="text-beige font-yatra text-sm">Or Jump To Page</label>
-          <p-inputnumber
-            [(ngModel)]="comicId"
-            maxlength="4"
-            [useGrouping]="false"
-            autofocus
-          />
+          <div class="flex flex-col items-center gap-2 translate-y-2">
+            <p-inputnumber
+              [(ngModel)]="pageId"
+              maxlength="4"
+              min="1"
+              [max]="maxAmount()"
+              [useGrouping]="false"
+              placeholder="1"
+              autofocus
+              (keypress)="onPressJumpToPage($event)"
+            />
+            <p class="text-beige font-yatra text-[10px]">
+              Max {{ maxAmount() }} pages
+            </p>
+          </div>
           <button
+            (click)="onJumpToPage()"
             type="button"
             class="text-beige font-yatra text-sm py-1 px-2 cursor-pointer hover:text-light transition duration-200 border border-beige hover:border-light rounded-lg"
           >
             Go!
           </button>
         </div>
-        <azra-separator-icon />
+        <img
+          src="assets/images/sprite.svg"
+          alt="main_page"
+          width="146"
+          height="53"
+        />
         @let hbooks = contents();
         @for (book of hbooks; track $index) {
           <div class="w-2/3">
@@ -39,7 +59,7 @@
             </h2>
           </div>
           @for (chapter of book.chapters; track $index) {
-            <button>
+            <button (click)="onChapterClick(chapter.title)">
               <h4 class="text-xl font-vinque text-center text-light">
                 {{ chapter.title }}
               </h4>
@@ -71,14 +91,24 @@
       of Azra
     </a>
     <azra-separator-icon />
-    <div class="flex items-center gap-8">
+    <div class="flex items-center gap-8 mb-3">
       <label class="text-beige font-yatra text-sm">Jump To Page</label>
-      <p-inputnumber
-        [(ngModel)]="comicId"
-        maxlength="4"
-        [useGrouping]="false"
-      />
+      <div class="flex flex-col items-center gap-2 translate-y-2">
+        <p-inputnumber
+          [(ngModel)]="pageId"
+          maxlength="4"
+          min="1"
+          [max]="maxAmount()"
+          [useGrouping]="false"
+          placeholder="1"
+          (keypress)="onPressJumpToPage($event)"
+        />
+        <p class="text-beige font-yatra text-[10px]">
+          Max {{ maxAmount() }} pages
+        </p>
+      </div>
       <button
+        (click)="onJumpToPage()"
         type="button"
         class="text-beige font-yatra text-sm py-1 px-2 cursor-pointer hover:text-light transition duration-200 border border-beige hover:border-light rounded-lg"
       >
@@ -95,7 +125,7 @@
         </h2>
       </div>
       @for (chapter of book.chapters; track $index) {
-        <button>
+        <button (click)="onChapterClick(chapter.title)">
           <h4
             class="text-2xl font-vinque text-center mt-4 uppercase text-light cursor-pointer hover:text-beige transition duration-200"
           >

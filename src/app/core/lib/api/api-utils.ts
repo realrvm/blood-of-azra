@@ -1,4 +1,4 @@
-import { type AzraImage } from '@azra/core'
+import { type AzraImage, type ChaptersTitleAndId } from '@azra/core'
 import * as qs from 'qs'
 
 const query = qs.stringify(
@@ -58,12 +58,6 @@ export function countImagesAmount<T>(struct: T): number {
   return amount
 }
 
-export function getRange(id = 1): number[] {
-  if (id > 1) return [id - 1, id, id + 1, id + 2]
-
-  return [3, 2, 1]
-}
-
 export function createContentStruct<T>(struct: T): AzraImage[] {
   const images: AzraImage[] = []
   const stack = [struct]
@@ -93,4 +87,23 @@ export function createContentStruct<T>(struct: T): AzraImage[] {
   }
 
   return images
+}
+
+export function getChaptersTitleAndIds<
+  T extends { title: string; comics: { title: string }[] },
+>(struct: T[]): ChaptersTitleAndId[] {
+  const titleAndId: ChaptersTitleAndId[] = []
+
+  for (const chapter of struct) {
+    const title = chapter.title
+    const imgId = Number(chapter.comics[0].title)
+
+    titleAndId.push({ title, imgId })
+  }
+
+  return titleAndId
+}
+
+export function getCurrentChapter<T>(struct: T) {
+  console.log(struct)
 }

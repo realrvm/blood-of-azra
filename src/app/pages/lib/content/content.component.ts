@@ -1,7 +1,7 @@
-import { AsyncPipe } from '@angular/common'
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
   type ElementRef,
   inject,
@@ -15,7 +15,7 @@ import { SidebarComponent } from '@azra/sidebar'
 
 @Component({
   selector: 'azra-desktop',
-  imports: [SidebarComponent, DebounceDirective, AsyncPipe],
+  imports: [SidebarComponent, DebounceDirective],
   templateUrl: './content.component.html',
   styles: `
     :host {
@@ -25,6 +25,7 @@ import { SidebarComponent } from '@azra/sidebar'
   host: {
     '(document:keyup)': 'handleOnPress($event)',
   },
+  providers: [ContentApiService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentComponent implements OnInit {
@@ -36,7 +37,13 @@ export class ContentComponent implements OnInit {
 
   public blob$ = this.contentApiService.blob$
   public hasNoImage = signal<boolean>(true)
-  public currentImageNumber = this.contentApiService.imagesRequest
+  private currentImageNumber = this.contentApiService.imagesRequest.asReadonly()
+  private imagesAmount = this.contentApiService.contentImagesAmount
+  public amountTitle = computed(() =>
+    this.imagesAmount() - 1 >= this.currentImageNumber()
+      ? this.currentImageNumber()
+      : `${this.currentImageNumber()} - Last Page`,
+  )
 
   ngOnInit(): void {
     this.blob$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((blob) => {
@@ -55,7 +62,10 @@ export class ContentComponent implements OnInit {
   }
 
   public handleOnImgClick(): void {
-    this.contentApiService.imagesRequest.update((prev) => (prev ? prev + 1 : 1))
+    const max = this.imagesAmount()
+    this.contentApiService.imagesRequest.update((prev) =>
+      prev < max ? prev + 1 : max,
+    )
   }
 
   public handleOnPress(event: KeyboardEvent): void {
@@ -70,9 +80,13 @@ export class ContentComponent implements OnInit {
     }
 
     if (event.code === 'ArrowRight') {
-      this.contentApiService.imagesRequest.update((prev) =>
-        prev < 1 ? 1 : prev + 1,
-      )
+      this.contentApiService.imagesRequest.update((prev) => {
+        const max = this.imagesAmount()
+
+        if (prev < 1) return 1
+
+        return prev < max ? prev + 1 : max
+      })
     }
   }
 }

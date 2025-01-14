@@ -22,7 +22,7 @@ export class ContactsDrawerComponent implements OnInit {
   private readonly contactsDrawerService = inject(DrawersService)
 
   public readonly contactsValue = this.contactsService.drawersValue
-  public readonly contactsError = this.contactsService.drawersError
+  public readonly errorMessage = this.contactsService.errorMessage
   public readonly contactsLoading = this.contactsService.drawersLoading
 
   public contactsDrawer = this.contactsDrawerService.isContactsDrawerOpen

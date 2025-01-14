@@ -4,11 +4,13 @@ import {
   ApiService,
   type AzraImage,
   type CachedImage,
+  type ChaptersTitleAndId,
   type Content,
   type ContentBook,
   LocalStorageService,
 } from '@azra/core'
 import {
+  BehaviorSubject,
   combineLatest,
   filter,
   from,
@@ -24,12 +26,10 @@ import {
   contentUrl,
   countImagesAmount,
   createContentStruct,
-  getRange,
+  getChaptersTitleAndIds,
 } from './api-utils'
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ContentApiService {
   private readonly apiService = inject(ApiService)
   private readonly localStorageService = inject(LocalStorageService)
@@ -42,6 +42,8 @@ export class ContentApiService {
 
   private ids = new Set<number>()
   private cachedImages: CachedImage[] = []
+  private titlesAndIds: ChaptersTitleAndId[] = []
+  private maxAmount = new BehaviorSubject<number>(0)
 
   private contentResource = rxResource({
     loader: () =>
@@ -49,6 +51,16 @@ export class ContentApiService {
         map((req) => req.data[0].books.book),
         tap((data) => {
           this.imagesListSubject.next(createContentStruct(data))
+          this.titlesAndIds = [...getChaptersTitleAndIds(data[0].chapters)]
+          const max = countImagesAmount(data)
+          this.maxAmount.next(max)
+          if (
+            Number(this.localStorageValue) > max ||
+            Number(this.localStorageValue) < 1 ||
+            !Number(this.localStorageValue)
+          ) {
+            this.localStorageService.set('azraLastImage', max)
+          }
         }),
       ),
   })
@@ -58,11 +70,12 @@ export class ContentApiService {
   public readonly blob$ = combineLatest(
     this.imagesListSubject,
     this.imagesRequest$,
+    this.maxAmount,
   ).pipe(
-    filter((response) => Boolean(response[0].length)),
+    filter((response) => Boolean(response[0].length && response[2])),
     switchMap(([content, id]) => {
       this.ids.clear()
-      getRange(id).forEach(this.ids.add, this.ids)
+      this.getRange(id).forEach(this.ids.add, this.ids)
 
       const filteredCachedImages = this.cachedImages.filter((img) =>
         this.ids.has(img.id),
@@ -72,7 +85,7 @@ export class ContentApiService {
       const blobIndex = this.cachedImages.findIndex((img) => img.id === id)
 
       if (blobIndex > -1) {
-        return from(getRange(id)).pipe(
+        return from(this.getRange(id)).pipe(
           mergeMap((ids) => {
             const currentBlobIndex = this.cachedImages.findIndex(
               (img) => img.id === ids,
@@ -97,7 +110,7 @@ export class ContentApiService {
         )
       }
 
-      return from(getRange(id)).pipe(
+      return from(this.getRange(id)).pipe(
         mergeMap((ids) =>
           of(ids).pipe(
             switchMap(() => {
@@ -133,9 +146,41 @@ export class ContentApiService {
     return countImagesAmount<ContentBook[]>(amount)
   })
 
+  public findComicByChapterClick(title: string): void {
+    const contentAzra = this.titlesAndIds.find((item) => item.title === title)
+
+    if (contentAzra) {
+      this.localStorageService.set('azraLastImage', contentAzra.imgId)
+
+      this.imagesRequest.set(contentAzra.imgId)
+    }
+  }
+
+  public toLastViewedPage(): void {
+    const lastImage = Number(this.localStorageValue) || 1
+
+    this.imagesRequest.set(lastImage)
+  }
+
+  public toPage(pageId: number): void {
+    this.localStorageService.set('azraLastImage', pageId)
+
+    this.imagesRequest.set(pageId)
+  }
+
   private checkAndCacheImage(id: number, blob: Blob) {
     if (this.ids.has(id)) {
       this.cachedImages.push({ id, blob })
     }
+  }
+
+  private getRange(id = 1): number[] {
+    const max = this.maxAmount.getValue()
+
+    if (id > 1 && max - id >= 3) return [id - 1, id, id + 1, id + 2]
+
+    if (id > 1 && max - id < 3) return [max - 3, max - 2, max - 1, max]
+
+    return [3, 2, 1]
   }
 }
