@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     screens: {
       md: '1070px',
+      lg: '1920px',
     },
     fontFamily: {
       yatra: ['var(--font-family-yatra)', 'sans-serif'],

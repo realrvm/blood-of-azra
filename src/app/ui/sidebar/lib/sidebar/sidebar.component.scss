@@ -1,5 +1,5 @@
 :host {
-  @apply h-full w-full py-4 md:py-16 md:max-w-[400px];
+  @apply h-full w-full py-4 md:py-16 md:max-w-[300px];
 
   ::ng-deep .p-inputnumber-input {
     @apply w-16 border border-beige opacity-50 focus:opacity-100 hover:opacity-100 text-white rounded-md;
