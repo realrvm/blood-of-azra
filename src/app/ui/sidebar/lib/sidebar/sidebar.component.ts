@@ -36,6 +36,8 @@ export class SidebarComponent {
     initialValue: false,
   })
 
+  public readonly currentPage = this.contentApiService.imagesRequest
+
   public readonly contents = this.contentApiService.contentData
   public readonly maxAmount = this.contentApiService.contentImagesAmount
 

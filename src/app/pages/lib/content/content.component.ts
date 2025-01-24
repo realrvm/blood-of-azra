@@ -1,3 +1,4 @@
+import { AsyncPipe, DOCUMENT } from '@angular/common'
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,16 +11,24 @@ import {
   viewChild,
 } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { ArrowLeftComponent, ArrowRightComponent } from '@azra/arrows'
 import { ContentApiService, DebounceDirective } from '@azra/core'
 import { SidebarComponent } from '@azra/sidebar'
+import { distinctUntilChanged } from 'rxjs'
 
 @Component({
   selector: 'azra-desktop',
-  imports: [SidebarComponent, DebounceDirective],
+  imports: [
+    SidebarComponent,
+    DebounceDirective,
+    AsyncPipe,
+    ArrowLeftComponent,
+    ArrowRightComponent,
+  ],
   templateUrl: './content.component.html',
   styles: `
     :host {
-      @apply block h-full p-4;
+      @apply block h-full py-4 px-4 md:px-8;
     }
   `,
   host: {
@@ -34,6 +43,13 @@ export class ContentComponent implements OnInit {
   public readonly isContentLoading = this.contentApiService.isContentLoading
   public image = viewChild<ElementRef<HTMLImageElement>>('img')
   private readonly destroyRef = inject(DestroyRef)
+  public readonly isImageLoading$ = this.contentApiService.isImageLoading$.pipe(
+    distinctUntilChanged(),
+  )
+
+  private readonly document = inject(DOCUMENT)
+  private element!: HTMLElement
+  public isFullscreen = signal<boolean>(false)
 
   public blob$ = this.contentApiService.blob$
   public hasNoImage = signal<boolean>(true)
@@ -46,6 +62,8 @@ export class ContentComponent implements OnInit {
   )
 
   ngOnInit(): void {
+    this.element = this.document.documentElement
+
     this.blob$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((blob) => {
       if (blob) {
         this.hasNoImage.set(false)
@@ -87,6 +105,18 @@ export class ContentComponent implements OnInit {
 
         return prev < max ? prev + 1 : max
       })
+    }
+  }
+
+  public onToggleFullscreen() {
+    if (!this.document.fullscreenElement) {
+      this.isFullscreen.set(true)
+
+      this.element.requestFullscreen()
+    } else if (this.document.fullscreenElement) {
+      this.isFullscreen.set(false)
+
+      this.document.exitFullscreen()
     }
   }
 }

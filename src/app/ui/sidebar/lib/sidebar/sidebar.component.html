@@ -103,8 +103,8 @@
           placeholder="1"
           (keypress)="onPressJumpToPage($event)"
         />
-        <p class="text-beige font-yatra text-[10px]">
-          Max {{ maxAmount() }} pages
+        <p class="text-beige font-yatra text-[14px] w-[100px]">
+        {{ maxAmount() ? currentPage() : 0 }} out of {{ maxAmount() }}
         </p>
       </div>
       <button
@@ -127,7 +127,7 @@
       @for (chapter of book.chapters; track $index) {
         <button (click)="onChapterClick(chapter.title)">
           <h4
-            class="text-2xl font-vinque text-center mt-4 uppercase text-light cursor-pointer hover:text-beige transition duration-200"
+            class="text-lg font-vinque text-center mt-4 uppercase text-light cursor-pointer hover:text-beige transition duration-200"
           >
             {{ chapter.title }}
           </h4>

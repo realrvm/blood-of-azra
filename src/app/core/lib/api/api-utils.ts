@@ -103,7 +103,3 @@ export function getChaptersTitleAndIds<
 
   return titleAndId
 }
-
-export function getCurrentChapter<T>(struct: T) {
-  console.log(struct)
-}

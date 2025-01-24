@@ -33,32 +33,10 @@
     />
   </div>
   <div class="flex items-center px-2 justify-between mt-auto">
-    <button
-      (debounceClick)="onPrevSlideClick()"
-      azraDebounce
-      [debounceTime]="200"
-    >
-      <img
-        src="assets/images/arrow-left.png"
-        alt="arrow_left"
-        width="40"
-        height="10"
-      />
-    </button>
+    <azra-arrow-left />
     <span class="text-beige text-2xl text-center font-yatra">{{
       amountTitle()
     }}</span>
-    <button
-      (debounceClick)="onNextSlideClick()"
-      azraDebounce
-      [debounceTime]="200"
-    >
-      <img
-        src="assets/images/arrow-right.png"
-        alt="arrow_right"
-        width="40"
-        height="10"
-      />
-    </button>
+    <azra-arrow-right />
   </div>
 </div>

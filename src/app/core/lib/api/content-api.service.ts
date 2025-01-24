@@ -1,3 +1,4 @@
+import { type HttpErrorResponse } from '@angular/common/http'
 import { computed, inject, Injectable, signal } from '@angular/core'
 import { rxResource, toObservable } from '@angular/core/rxjs-interop'
 import {
@@ -11,8 +12,11 @@ import {
 } from '@azra/core'
 import {
   BehaviorSubject,
+  catchError,
   combineLatest,
+  EMPTY,
   filter,
+  finalize,
   from,
   map,
   mergeMap,
@@ -45,6 +49,9 @@ export class ContentApiService {
   private titlesAndIds: ChaptersTitleAndId[] = []
   private maxAmount = new BehaviorSubject<number>(0)
 
+  private isImageLoading = new BehaviorSubject<boolean>(false)
+  public isImageLoading$ = this.isImageLoading.asObservable()
+
   private contentResource = rxResource({
     loader: () =>
       this.apiService.get<Content>(contentUrl).pipe(
@@ -71,67 +78,81 @@ export class ContentApiService {
     this.imagesListSubject,
     this.imagesRequest$,
     this.maxAmount,
-  ).pipe(
-    filter((response) => Boolean(response[0].length && response[2])),
-    switchMap(([content, id]) => {
-      this.ids.clear()
-      this.getRange(id).forEach(this.ids.add, this.ids)
-
-      const filteredCachedImages = this.cachedImages.filter((img) =>
-        this.ids.has(img.id),
-      )
-
-      this.cachedImages = filteredCachedImages
-      const blobIndex = this.cachedImages.findIndex((img) => img.id === id)
-
-      if (blobIndex > -1) {
-        return from(this.getRange(id)).pipe(
-          mergeMap((ids) => {
-            const currentBlobIndex = this.cachedImages.findIndex(
-              (img) => img.id === ids,
-            )
-
-            if (currentBlobIndex === -1) {
-              const azra = content.find(
-                (comic) => comic.id === ids,
-              ) as AzraImage
-              if (azra) {
-                this.apiService
-                  .get<Blob>(azra.url, 'blob')
-                  .pipe(tap((blob) => this.checkAndCacheImage(ids, blob)))
-                  .subscribe()
-              }
-            }
-
-            const image = this.cachedImages[blobIndex]
-            this.localStorageService.set('azraLastImage', image?.id)
-            return of(image?.blob)
-          }),
-        )
-      }
-
-      return from(this.getRange(id)).pipe(
-        mergeMap((ids) =>
-          of(ids).pipe(
-            switchMap(() => {
-              const azra = content.find(
-                (comic) => comic.id === ids,
-              ) as AzraImage
-
-              return this.apiService.get<Blob>(azra?.url, 'blob')
-            }),
-            tap((blob) => {
-              this.cachedImages.push({ id: ids, blob })
-            }),
-            map(() => {
-              const blobObj = this.cachedImages.find((img) => img.id === id)
-              return blobObj?.blob
-            }),
-          ),
-        ),
-      )
-    }),
   )
+    .pipe(
+      filter((response) => Boolean(response[0].length && response[2])),
+      switchMap(([content, id]) => {
+        this.ids.clear()
+        this.getRange(id).forEach(this.ids.add, this.ids)
+
+        const filteredCachedImages = this.cachedImages.filter((img) =>
+          this.ids.has(img.id),
+        )
+
+        this.cachedImages = filteredCachedImages
+        const blobIndex = this.cachedImages.findIndex((img) => img.id === id)
+
+        if (blobIndex > -1) {
+          return from(this.getRange(id)).pipe(
+            tap(() => this.isImageLoading.next(true)),
+            mergeMap((ids) => {
+              const currentBlobIndex = this.cachedImages.findIndex(
+                (img) => img.id === ids,
+              )
+
+              if (currentBlobIndex === -1) {
+                const azra = content.find(
+                  (comic) => comic.id === ids,
+                ) as AzraImage
+                if (azra) {
+                  this.apiService
+                    .get<Blob>(azra.url, 'blob')
+                    .pipe(tap((blob) => this.checkAndCacheImage(ids, blob)))
+                    .subscribe()
+                }
+              }
+
+              const image = this.cachedImages[blobIndex]
+              this.localStorageService.set('azraLastImage', image?.id)
+              return of(image?.blob)
+            }),
+            tap(() => this.isImageLoading.next(false)),
+          )
+        }
+
+        return from(this.getRange(id)).pipe(
+          tap(() => this.isImageLoading.next(true)),
+          mergeMap((ids) =>
+            of(ids).pipe(
+              switchMap(() => {
+                const azra = content.find(
+                  (comic) => comic.id === ids,
+                ) as AzraImage
+
+                return this.apiService.get<Blob>(azra?.url, 'blob')
+              }),
+              tap((blob) => {
+                this.cachedImages.push({ id: ids, blob })
+              }),
+              map(() => {
+                const blobObj = this.cachedImages.find((img) => img.id === id)
+                return blobObj?.blob
+              }),
+            ),
+          ),
+          tap(() => this.isImageLoading.next(false)),
+        )
+      }),
+    )
+    .pipe(
+      catchError((err: HttpErrorResponse) => {
+        console.log(err.status, err.name)
+        return EMPTY
+      }),
+      finalize(() => {
+        this.isImageLoading.next(false)
+      }),
+    )
 
   public readonly isContentLoading = computed(() =>
     this.contentResource.isLoading(),

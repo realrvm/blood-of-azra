@@ -4,6 +4,7 @@ import {
   computed,
   DestroyRef,
   type ElementRef,
+  forwardRef,
   inject,
   type OnInit,
   signal,
@@ -11,6 +12,7 @@ import {
 } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 import { Router } from '@angular/router'
+import { ArrowLeftComponent, ArrowRightComponent } from '@azra/arrows'
 import {
   ContentApiService,
   DebounceDirective,
@@ -19,7 +21,11 @@ import {
 
 @Component({
   selector: 'azra-handset',
-  imports: [DebounceDirective],
+  imports: [
+    DebounceDirective,
+    forwardRef(() => ArrowLeftComponent),
+    forwardRef(() => ArrowRightComponent),
+  ],
   templateUrl: './handset.component.html',
   styles: `
     :host {
@@ -79,22 +85,6 @@ export class HandsetComponent implements OnInit {
 
   public goToChapters(): void {
     this.router.navigate(['/content'])
-  }
-
-  public onPrevSlideClick(): void {
-    this.contentApiService.imagesRequest.update((prev) =>
-      prev <= 1 ? 1 : prev - 1,
-    )
-  }
-
-  public onNextSlideClick(): void {
-    this.contentApiService.imagesRequest.update((prev) => {
-      const max = this.imagesAmount()
-
-      if (prev < 1) return 1
-
-      return prev < max ? prev + 1 : max
-    })
   }
 
   public goToMainPage(): void {

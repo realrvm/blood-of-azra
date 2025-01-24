@@ -2,12 +2,7 @@
   <div class="flex gap-4 h-full" tabindex="-1">
     <azra-sidebar />
     <div class="flex-1 flex justify-center">
-      <div class="max-w-[1000px] w-full relative">
-        @if (!isContentLoading() && !isContentError()) {
-          <p class="text-beige text-2xl font-vinque absolute">
-            {{ amountTitle() }}
-          </p>
-        }
+      <div class="w-[70px] self-start">
         @if (isContentLoading()) {
           <p class="text-beige text-2xl font-vinque">Loading...</p>
         }
@@ -16,6 +11,16 @@
             Server Error. Reload or Try Later
           </p>
         }
+        @if (isImageLoading$ | async) {
+          <div class="text-beige text-sm font-vinque flex flex-col">
+            <span>Loading</span> <span>images...</span>
+          </div>
+        }
+      </div>
+      @if (!hasNoImage()) {
+        <azra-arrow-left />
+      }
+      <div class="max-w-[750px] w-full relative">
         <img
           #img
           [class.hidden]="hasNoImage()"
@@ -27,6 +32,21 @@
           tabindex="-1"
         />
       </div>
+      @if (!hasNoImage()) {
+        <azra-arrow-right />
+      }
+      <button (click)="onToggleFullscreen()" class="absolute top-4 right-4">
+        <img
+          [src]="
+            isFullscreen()
+              ? 'assets/images/normal.png'
+              : 'assets/images/full.png'
+          "
+          [alt]="isFullscreen() ? 'normal_screen' : 'full_screen'"
+          width="30"
+          height="30"
+        />
+      </button>
     </div>
   </div>
 </div>
