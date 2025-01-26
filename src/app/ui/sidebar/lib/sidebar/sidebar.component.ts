@@ -1,10 +1,5 @@
 import { AsyncPipe } from '@angular/common'
-import {
-  ChangeDetectionStrategy,
-  Component,
-  //effect,
-  inject,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core'
 import { toSignal } from '@angular/core/rxjs-interop'
 import { FormsModule } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
@@ -36,7 +31,8 @@ export class SidebarComponent {
     initialValue: false,
   })
 
-  public readonly currentPage = this.contentApiService.imagesRequest
+  public readonly currentPage =
+    this.contentApiService.imagesRequest.asReadonly()
 
   public readonly contents = this.contentApiService.contentData
   public readonly maxAmount = this.contentApiService.contentImagesAmount

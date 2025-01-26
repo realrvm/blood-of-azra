@@ -4,6 +4,7 @@ import {
   Component,
   computed,
   DestroyRef,
+  effect,
   type ElementRef,
   inject,
   type OnInit,
@@ -11,6 +12,7 @@ import {
   viewChild,
 } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
+import { Title } from '@angular/platform-browser'
 import { ArrowLeftComponent, ArrowRightComponent } from '@azra/arrows'
 import { ContentApiService, DebounceDirective } from '@azra/core'
 import { SidebarComponent } from '@azra/sidebar'
@@ -39,6 +41,7 @@ import { distinctUntilChanged } from 'rxjs'
 })
 export class ContentComponent implements OnInit {
   private readonly contentApiService = inject(ContentApiService)
+  private readonly tabTitle = inject(Title)
   public readonly isContentError = this.contentApiService.contentError
   public readonly isContentLoading = this.contentApiService.isContentLoading
   public image = viewChild<ElementRef<HTMLImageElement>>('img')
@@ -46,6 +49,18 @@ export class ContentComponent implements OnInit {
   public readonly isImageLoading$ = this.contentApiService.isImageLoading$.pipe(
     distinctUntilChanged(),
   )
+
+  private readonly maxAmount = this.contentApiService.contentImagesAmount
+  private readonly currentPage =
+    this.contentApiService.imagesRequest.asReadonly()
+
+  private readonly tab = effect(() => {
+    this.tabTitle.setTitle(
+      this.maxAmount()
+        ? ` ${this.currentPage()} out of ${this.maxAmount()}`
+        : 'TBOA',
+    )
+  })
 
   private readonly document = inject(DOCUMENT)
   private element!: HTMLElement
