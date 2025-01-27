@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  api_url: 'https://thebloodofazra.com',
+  api_url: 'https://thebloodofazra.com/s',
 }
