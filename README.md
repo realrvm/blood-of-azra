@@ -14,7 +14,7 @@
 ## Установка
 
 ```bash
-git git@github.com:realrvm/blood-of-azra.git
+git clone git@github.com:realrvm/blood-of-azra.git
 cd blood-of-azra
 npm ci
 ```
