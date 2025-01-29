@@ -10,6 +10,7 @@ export const routes: Routes = [
   },
   {
     path: PATHS.home,
+    title: 'TBOA',
     component: HomeComponent,
     children: [
       {

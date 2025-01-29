@@ -103,9 +103,12 @@
           placeholder="1"
           (keypress)="onPressJumpToPage($event)"
         />
-        <p class="text-beige font-yatra text-[14px] w-[100px]">
-        {{ maxAmount() ? currentPage() : 0 }} out of {{ maxAmount() }}
-        </p>
+        <div
+          class="text-beige font-yatra text-[14px] w-[100px] flex flex-wrap justify-center gap-1"
+        >
+          <span>{{ maxAmount() ? currentPage() : 0 }}</span>
+          <span> out of </span> <span>{{ maxAmount() }}</span>
+        </div>
       </div>
       <button
         (click)="onJumpToPage()"
